@@ -1,7 +1,36 @@
 import { Link } from 'react-router-dom';
 import './Register.css';
+import { useContext } from 'react';
+import { AuthContext } from '../providers/AuthProviders';
 
 const Register = () => {
+
+    const { createUser } = useContext(AuthContext);
+
+    const handleRegister = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const name = form.name.value;
+        const email = form.email.value;
+        const password = form.password.value;
+        const user = { name, email, password };
+        console.log(user);
+
+         // Create user by password
+         createUser(email, password)
+         .then((userCredential) => {
+             const user = userCredential.user;
+             console.log(user);
+             form.reset();
+         })
+         .catch((error) => {
+             // const errorCode = error.code;
+             const errorMessage = error.message;
+             console.log(errorMessage);
+         });
+
+    }
+
     return (
         <div>
 
@@ -12,7 +41,7 @@ const Register = () => {
                         <h1 className="text-5xl font-bold">Register</h1>
                     </div>
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                        <div className="card-body">
+                        <form onSubmit={handleRegister} className="card-body">
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Name</span>
@@ -37,7 +66,7 @@ const Register = () => {
                             <div className="form-control mt-6">
                                 <button className="btn btn-neutral">Register</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

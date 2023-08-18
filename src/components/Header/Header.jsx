@@ -1,7 +1,21 @@
 import { Link } from 'react-router-dom';
 import './Header.css';
+import { useContext } from 'react';
+import { AuthContext } from '../providers/AuthProviders';
 
 const Header = () => {
+    const { user, logOut } = useContext(AuthContext);
+
+    // Handle Logout
+    const handleLogout = () => {
+        logOut()
+            .then(() => {
+                console.log('Sign-out successful.');
+            }).catch((error) => {
+                console.log('An error happened.', error);
+            });
+    }
+
     return (
         <div>
 
@@ -31,8 +45,12 @@ const Header = () => {
                     </ul>
                 </div>
                 <div className="navbar-end flex flex-row gap-2">
-                    <Link to='/login' className="btn btn-neutral btn-xs md:btn-sm">Login</Link>
-                    <Link to='/register' className="btn btn-neutral btn-xs md:btn-sm">Register</Link>
+                    {!user && <Link to='/login' className="btn btn-neutral btn-xs md:btn-sm">Login</Link>}
+                    {!user && <Link to='/register' className="btn btn-neutral btn-xs md:btn-sm">Register</Link>}
+
+                    {user && <span>{user.email}</span>}
+
+                    {user && <button onClick={handleLogout} className="btn btn-neutral btn-xs md:btn-sm">Logout</button>}
                 </div>
             </div>
 
